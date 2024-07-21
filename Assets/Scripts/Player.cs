@@ -6,11 +6,12 @@ public class Player : MonoBehaviour
 {
     private Rigidbody2D rigid;
 
-    public Vector2 inputVec;
+    [SerializeField] private Vector2 inputVec;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpPower = 10f;
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private float groundCheckDistance = 0.2f;
+    [SerializeField] private Vector3 bottomOffset;
+    [SerializeField] private Vector2 overlabBoxSize;
+    [SerializeField] private LayerMask groundLayer;
     private bool isGrounded;
 
     private void Start()
@@ -31,7 +32,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         PlayerMove();
-        CheckGrounded();
+        isGrounded = Physics2D.OverlapBox(transform.position + bottomOffset, overlabBoxSize, 0, groundLayer);
     }
 
     private void Jump()
@@ -44,27 +45,5 @@ public class Player : MonoBehaviour
     {
         var newInputVec = inputVec.normalized * speed * Time.deltaTime;
         rigid.MovePosition(rigid.position + newInputVec);
-    }
-
-    private void CheckGrounded()
-    {
-        RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance);
-        if (hit.collider != null && hit.collider.CompareTag("Ground"))
-        {
-            isGrounded = true;
-        }
-        else
-        {
-            isGrounded = false;
-        }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        if (groundCheck == null)
-            return;
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * groundCheckDistance);
-    }
+    }  
 }
