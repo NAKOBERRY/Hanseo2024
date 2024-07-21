@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            Jump();
+            JumpS();
         }
 
         if (Input.GetKeyDown(KeyCode.Q) && canReverseGravity && isGrounded && groundTimeCounter >= groundTimeThreshold)
@@ -58,11 +58,16 @@ public class Player : MonoBehaviour
         Gizmos.DrawWireCube(transform.position + bottomOffset, overlabBoxSize);
     }
 
-    private void Jump()
+    private void JumpS()
+    {
+        Vector3 jumpDirection = gravityReversed ? Vector3.down : Vector3.up;  
+        transform.Translate(jumpDirection * jumpPower * Time.fixedDeltaTime); 
+    }
+    /*private void Jump()
     {
         rigid.velocity = new Vector2(rigid.velocity.x, 0);
         rigid.AddForce(Vector2.up * (gravityReversed ? -jumpPower : jumpPower), ForceMode2D.Impulse);
-    }
+    }*/
 
     private void PlayerMove()
     {
