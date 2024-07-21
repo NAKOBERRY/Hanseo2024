@@ -1,11 +1,16 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     private Rigidbody2D rigid;
-    private Vector2 inputVec;
+
+    public Vector2 inputVec;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpPower = 10f;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundCheckDistance = 0.2f;
     private bool isGrounded;
 
     private void Start()
@@ -26,6 +31,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         PlayerMove();
+        CheckGrounded();
     }
 
     private void Jump()
@@ -36,23 +42,29 @@ public class Player : MonoBehaviour
 
     private void PlayerMove()
     {
-        var newInputVec = inputVec * speed * Time.deltaTime;
+        var newInputVec = inputVec.normalized * speed * Time.deltaTime;
         rigid.MovePosition(rigid.position + newInputVec);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void CheckGrounded()
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance);
+        if (hit.collider != null && hit.collider.CompareTag("Ground"))
         {
             isGrounded = true;
         }
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
+        else
         {
             isGrounded = false;
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (groundCheck == null)
+            return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * groundCheckDistance);
     }
 }
