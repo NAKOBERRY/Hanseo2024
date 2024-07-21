@@ -5,24 +5,29 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private Rigidbody2D rigid;
+    private SpriteRenderer spri;
 
-    [SerializeField] private Vector2 inputVec;
+
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpPower = 10f;
+    [SerializeField] private int playerHp = 6;
+
+    [SerializeField] private Vector2 inputVec;
     [SerializeField] private Vector3 bottomOffset;
     [SerializeField] private Vector2 overlabBoxSize;
     [SerializeField] private LayerMask groundLayer;
     private bool isGrounded;
     private bool canReverseGravity = true;
     private bool gravityReversed = false;
-    private float groundTimeCounter = 0f;
+    private float groundTimeCounter = 2f;
     [SerializeField] private float groundTimeThreshold = 2f;
 
-    
+
 
     private void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
+        spri = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
@@ -38,6 +43,8 @@ public class Player : MonoBehaviour
         {
             ReverseGravity();
         }
+
+        FlipSprite();
     }
 
     private void FixedUpdate()
@@ -54,6 +61,14 @@ public class Player : MonoBehaviour
             groundTimeCounter = 0f;
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Ondamage();
+        }
+    }
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -63,10 +78,10 @@ public class Player : MonoBehaviour
     private void Jump()
     {
         rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
-    }   
+    }
 
     private void PlayerMove()
-    {        
+    {
         transform.Translate(Vector2.right * inputVec.x * speed * Time.fixedDeltaTime);
     }
 
@@ -86,5 +101,21 @@ public class Player : MonoBehaviour
         canReverseGravity = true;
     }
 
-    
+    private void Ondamage()
+    {
+        playerHp -= 1;
+    }
+
+    private void FlipSprite()
+    {
+        if(inputVec.x < 0)
+        {
+            spri.flipX = true;
+        }
+        else if(inputVec.x > 0) 
+        {
+            spri.flipX= false;
+        }
+    }
+
 }
