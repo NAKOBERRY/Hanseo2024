@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
     private float groundTimeCounter = 0f;
     [SerializeField] private float groundTimeThreshold = 2f;
 
+    
+
     private void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -60,8 +62,7 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        Vector3 jumpDirection = gravityReversed ? Vector3.down : Vector3.up;  
-        transform.Translate(jumpDirection * jumpPower * Time.fixedDeltaTime); 
+        rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
     }   
 
     private void PlayerMove()
@@ -84,4 +85,6 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(2f);
         canReverseGravity = true;
     }
+
+    
 }
