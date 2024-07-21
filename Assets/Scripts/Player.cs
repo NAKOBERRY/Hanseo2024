@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class Player : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class Player : MonoBehaviour
     private bool gravityReversed = false;
     private float groundTimeCounter = 2f;
     [SerializeField] private float groundTimeThreshold = 2f;
+    private float groggyTime;
+    private float invincibleTime;
 
 
 
@@ -45,6 +48,7 @@ public class Player : MonoBehaviour
         }
 
         FlipSprite();
+        invicibleTIme();
     }
 
     private void FixedUpdate()
@@ -64,9 +68,9 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy") && invincibleTime <= 0)
         {
-            Ondamage();
+            Ondamage(collision.transform);
         }
     }
     void OnDrawGizmos()
@@ -82,7 +86,10 @@ public class Player : MonoBehaviour
 
     private void PlayerMove()
     {
-        transform.Translate(Vector2.right * inputVec.x * speed * Time.fixedDeltaTime);
+        if (groggyTime <= 0)
+            transform.Translate(Vector2.right * inputVec.x * speed * Time.fixedDeltaTime);
+        else
+            groggyTime -= Time.fixedDeltaTime;
     }
 
 
@@ -101,9 +108,12 @@ public class Player : MonoBehaviour
         canReverseGravity = true;
     }
 
-    private void Ondamage()
+    private void Ondamage(Transform target)
     {
-        playerHp -= 1;
+        rigid.velocity = new Vector2(-4 * (target.position.x > transform.position.x ? 1 : -1), 10);
+        playerHp--;
+        groggyTime = 0.5f;
+        invincibleTime = 1f;
     }
 
     private void FlipSprite()
@@ -118,4 +128,16 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void invicibleTIme()
+    {
+        if (invincibleTime <= 0)
+        {
+            spri.color = new Color(1, 1, 1, 1);
+        }
+        else
+        {
+            spri.color = new Color(1, 1, 1, 0.5f);
+            invincibleTime -= Time.deltaTime;
+        }
+    }
 }
