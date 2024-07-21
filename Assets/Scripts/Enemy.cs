@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private Rigidbody2D rigid;
+    private SpriteRenderer spriteRenderer;
+    private Animator animator;
 
-    // Update is called once per frame
-    void Update()
+    public bool isChasing;
+    public float chaseDistance;
+    public int nextMove;
+    private void Awake()
     {
-        
+        rigid = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+    }
+    private void FixedUpdate()
+    {
     }
 }
