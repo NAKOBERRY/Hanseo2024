@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     private bool isGrounded;
     private bool canReverseGravity = true;
     private bool gravityReversed = false;
+    private bool isReversingGravity = false; 
     private float groundContactTime = 0f;
     [SerializeField] private float groundTimeThreshold = 2f;
     private float groggyTime;
@@ -34,7 +35,10 @@ public class Player : MonoBehaviour
     {
         inputVec.x = Input.GetAxisRaw("Horizontal");
 
-        Jump();
+        if (!isReversingGravity)
+        {
+            Jump();
+        }
 
         if (Input.GetKeyDown(KeyCode.Q) && canReverseGravity && Time.time - groundContactTime >= groundTimeThreshold)
         {
@@ -47,7 +51,11 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        PlayerMove();
+        if (!isReversingGravity)
+        {
+            PlayerMove();
+        }
+
         CheckGrounded();
     }
 
@@ -91,10 +99,12 @@ public class Player : MonoBehaviour
         gravityReversed = !gravityReversed;
         rigid.gravityScale *= -1;
         canReverseGravity = false;
+        isReversingGravity = true;
 
         StartCoroutine(RotatePlayerOverTime(180f, rotationDuration));
         StartCoroutine(GravityCooldown());
-        
+
+  
         bottomOffset *= -1;
     }
 
@@ -113,6 +123,7 @@ public class Player : MonoBehaviour
         }
 
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, endRotation);
+        isReversingGravity = false; 
     }
 
     private IEnumerator GravityCooldown()
