@@ -516,8 +516,8 @@ MonoBehaviour:
   - {fileID: 442176905}
   - {fileID: 771541850}
   inputVec: {x: 0, y: 0}
-  bottomOffset: {x: 0, y: -0.6, z: 0}
-  overlabBoxSize: {x: 0, y: 1.5}
+  bottomOffset: {x: 0, y: -0.1, z: 0}
+  overlabBoxSize: {x: 0.8, y: 1.65}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -571,7 +571,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.039935112, y: -0.06389618}
+  m_Offset: {x: 0, y: -0.05}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -582,7 +582,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.8818159, y: 1.6485705}
+  m_Size: {x: 0.8, y: 1.65}
   m_EdgeRadius: 0
 --- !u!50 &652815510
 Rigidbody2D:
@@ -2529,6 +2529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e465f8c13b22b348adaefe0baaa2844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 1676688098}
 --- !u!1001 &2147264583
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2682,7 +2683,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6614617219419530873, guid: 1ca3e61ce5ec1ca45bccac4b9467080a, type: 3}
-      insertIndex: -1
+      insertIndex: 1
       addedObject: {fileID: 1890703070}
   m_SourcePrefab: {fileID: 100100000, guid: 1ca3e61ce5ec1ca45bccac4b9467080a, type: 3}
 --- !u!1660057539 &9223372036854775807
