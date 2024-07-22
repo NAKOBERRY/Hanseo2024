@@ -8,7 +8,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpPower = 10f;
-    [SerializeField] private int playerHp = 6;
+    [SerializeField] private int playerHp = 3;
+    public GameObject[] hpImages;
 
     [SerializeField] private Vector2 inputVec;
     [SerializeField] private Vector3 bottomOffset;
@@ -17,7 +18,7 @@ public class Player : MonoBehaviour
     private bool isGrounded;
     private bool canReverseGravity = true;
     private bool gravityReversed = false;
-    private bool isReversingGravity = false; 
+    private bool isReversingGravity = false;
     private float groundContactTime = 0f;
     [SerializeField] private float groundTimeThreshold = 2f;
     private float groggyTime;
@@ -46,7 +47,7 @@ public class Player : MonoBehaviour
         }
 
         FlipSprite();
-        invicibleTIme();
+        HandleInvincibilityTime();
     }
 
     private void FixedUpdate()
@@ -63,7 +64,7 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy") && invincibleTime <= 0)
         {
-            Ondamage(collision.transform);
+            TakeDamage(collision.transform);
         }
     }
 
@@ -104,7 +105,6 @@ public class Player : MonoBehaviour
         StartCoroutine(RotatePlayerOverTime(180f, rotationDuration));
         StartCoroutine(GravityCooldown());
 
-  
         bottomOffset *= -1;
     }
 
@@ -123,7 +123,7 @@ public class Player : MonoBehaviour
         }
 
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, endRotation);
-        isReversingGravity = false; 
+        isReversingGravity = false;
     }
 
     private IEnumerator GravityCooldown()
@@ -141,12 +141,14 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Ondamage(Transform target)
+    private void TakeDamage(Transform target)
     {
         rigid.velocity = new Vector2(-4 * (target.position.x > transform.position.x ? 1 : -1), 10);
         playerHp--;
         groggyTime = 0.5f;
         invincibleTime = 1f;
+     
+            hpImages[playerHp].SetActive(false); 
     }
 
     private void FlipSprite()
@@ -161,7 +163,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void invicibleTIme()
+    private void HandleInvincibilityTime()
     {
         if (invincibleTime <= 0)
         {
