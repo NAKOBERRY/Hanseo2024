@@ -510,7 +510,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 15
   jumpPower: 13
-  playerHp: 6
+  playerHp: 3
+  hpImages:
+  - {fileID: 1722284222}
+  - {fileID: 442176905}
+  - {fileID: 771541850}
   inputVec: {x: 0, y: 0}
   bottomOffset: {x: 0, y: -0.6, z: 0}
   overlabBoxSize: {x: 0, y: 1.5}
@@ -2387,10 +2391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a93256f9b7ce42d4c88e5071c76ab55f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Stages: []
-  stageIndex: 0
-  stagePoint: 0
-  totalPoint: 0
+  stageTMP: {fileID: 153461638}
 --- !u!1 &1722284222
 GameObject:
   m_ObjectHideFlags: 0
@@ -2511,6 +2512,23 @@ Transform:
   - {fileID: 1218364742}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1890703066 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6614617219419530873, guid: 1ca3e61ce5ec1ca45bccac4b9467080a, type: 3}
+  m_PrefabInstance: {fileID: 7069177383152260821}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1890703070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890703066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e465f8c13b22b348adaefe0baaa2844, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2147264583
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2662,7 +2680,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6614617219419530873, guid: 1ca3e61ce5ec1ca45bccac4b9467080a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1890703070}
   m_SourcePrefab: {fileID: 100100000, guid: 1ca3e61ce5ec1ca45bccac4b9467080a, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -148,7 +148,7 @@ public class Player : MonoBehaviour
         groggyTime = 0.5f;
         invincibleTime = 1f;
      
-            hpImages[playerHp].SetActive(false); 
+        hpImages[playerHp].SetActive(false); 
     }
 
     private void FlipSprite()

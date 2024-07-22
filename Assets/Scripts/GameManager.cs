@@ -1,31 +1,29 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject[] Stages;
+    private int curStage = 0;
+    public TextMeshProUGUI stageTMP;
+    private int stageClear = 2;
 
-    public int stageIndex;
-    public int stagePoint;
-    public int totalPoint;
+    
 
     public void NextStage()
-    {
-        if (stageIndex < Stages.Length)
+    {         
+        SceneManager.LoadScene(++curStage);       
+        stageTMP.text = "STAGE"+ curStage;
+    }
+
+    public void Clear()
+    {        
+        if(curStage == stageClear)
         {
-            //스테이지 변경
-            Stages[stageIndex].SetActive(false);
-            stageIndex++;
-            Stages[stageIndex].SetActive(true);
-            //점수 계산
-            totalPoint += stagePoint;
-            stagePoint = 0;
-        }
-        else
-        {
-            //클리어
-            Debug.Log("클리어");
+            //씬 이동 혹은 데스 패널 생성 등,
         }
     }
 }
