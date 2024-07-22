@@ -1,13 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class Player : MonoBehaviour
 {
     private Rigidbody2D rigid;
     private SpriteRenderer spri;
-
 
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpPower = 10f;
@@ -20,12 +17,12 @@ public class Player : MonoBehaviour
     private bool isGrounded;
     private bool canReverseGravity = true;
     private bool gravityReversed = false;
-    private float groundTimeCounter = 2f;
+    private float groundContactTime = 0f;
     [SerializeField] private float groundTimeThreshold = 2f;
     private float groggyTime;
     private float invincibleTime;
 
-
+    [SerializeField] private float rotationDuration = 1f;
 
     private void Start()
     {
@@ -37,12 +34,9 @@ public class Player : MonoBehaviour
     {
         inputVec.x = Input.GetAxisRaw("Horizontal");
 
-        if (Input.GetKeyDown(KeyCode.W) && isGrounded)
-        {
-            Jump();
-        }
+        Jump();
 
-        if (Input.GetKeyDown(KeyCode.Q) && canReverseGravity && isGrounded && groundTimeCounter >= groundTimeThreshold)
+        if (Input.GetKeyDown(KeyCode.Q) && canReverseGravity && Time.time - groundContactTime >= groundTimeThreshold)
         {
             ReverseGravity();
         }
@@ -54,16 +48,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         PlayerMove();
-        isGrounded = Physics2D.OverlapBox(transform.position + bottomOffset, overlabBoxSize, 0, groundLayer);
-
-        if (isGrounded)
-        {
-            groundTimeCounter += Time.fixedDeltaTime;
-        }
-        else
-        {
-            groundTimeCounter = 0f;
-        }
+        CheckGrounded();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -73,7 +58,8 @@ public class Player : MonoBehaviour
             Ondamage(collision.transform);
         }
     }
-    void OnDrawGizmos()
+
+    private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(transform.position + bottomOffset, overlabBoxSize);
@@ -81,31 +67,67 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space)) && isGrounded)
+        {
+            Vector2 jumpDirection = gravityReversed ? Vector2.down : Vector2.up;
+            rigid.AddForce(jumpDirection * jumpPower, ForceMode2D.Impulse);
+        }
     }
 
     private void PlayerMove()
     {
         if (groggyTime <= 0)
+        {
             transform.Translate(Vector2.right * inputVec.x * speed * Time.fixedDeltaTime);
+        }
         else
+        {
             groggyTime -= Time.fixedDeltaTime;
+        }
     }
-
 
     private void ReverseGravity()
     {
         gravityReversed = !gravityReversed;
         rigid.gravityScale *= -1;
-        groundTimeCounter = 0f;
         canReverseGravity = false;
+
+        StartCoroutine(RotatePlayerOverTime(180f, rotationDuration));
         StartCoroutine(GravityCooldown());
+        
+        bottomOffset *= -1;
+    }
+
+    private IEnumerator RotatePlayerOverTime(float angle, float duration)
+    {
+        float startRotation = transform.eulerAngles.z;
+        float endRotation = startRotation + angle;
+        float elapsed = 0.0f;
+
+        while (elapsed < duration)
+        {
+            float zRotation = Mathf.Lerp(startRotation, endRotation, elapsed / duration);
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, zRotation);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, endRotation);
     }
 
     private IEnumerator GravityCooldown()
     {
         yield return new WaitForSeconds(2f);
         canReverseGravity = true;
+    }
+
+    private void CheckGrounded()
+    {
+        isGrounded = Physics2D.OverlapBox(transform.position + bottomOffset, overlabBoxSize, 0, groundLayer);
+        if (isGrounded && groundContactTime == 0f)
+        {
+            groundContactTime = Time.time;
+        }
     }
 
     private void Ondamage(Transform target)
@@ -118,13 +140,13 @@ public class Player : MonoBehaviour
 
     private void FlipSprite()
     {
-        if(inputVec.x < 0)
+        if (inputVec.x < 0)
         {
             spri.flipX = true;
         }
-        else if(inputVec.x > 0) 
+        else if (inputVec.x > 0)
         {
-            spri.flipX= false;
+            spri.flipX = false;
         }
     }
 
