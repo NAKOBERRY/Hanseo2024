@@ -12,7 +12,7 @@ public class CircleRogic : MonoBehaviour
 
     private void OnEnable()
     {
-        rigid = circle.GetComponent<Rigidbody2D>();      
+        rigid = circle.GetComponent<Rigidbody2D>();
     }
 
 
@@ -23,3 +23,7 @@ public class CircleRogic : MonoBehaviour
         rigid.velocity = spawnDir * speed;
     }
 }
+
+
+
+
